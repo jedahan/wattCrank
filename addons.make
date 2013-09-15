@@ -1,0 +1,4 @@
+ofxXmlSettings
+ofxControlPanel
+ofxMacamPs3Eye
+ofxTesseract
