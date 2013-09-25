@@ -1,7 +1,7 @@
 #include "run.h"
 
 bool run::sort(run a, run b){
-    return a.score < b.score;
+    return a.score > b.score;
 }
 
 void run::setup(string name){
