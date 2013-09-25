@@ -13,11 +13,12 @@ void testApp::setup(){
     destination = ofPoint(source.x+100,source.y+60);
     rescan = false;
     init = false;
+    name = "Jonathan";
 
     // OCR
 	tess.setup();
-	tess.setWhitelist("1234567890");
-	tess.setBlacklist("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.,");
+	tess.setWhitelist("1234567890.");
+	tess.setBlacklist("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,");
 	tess.setAccuracy(ofxTesseract::ACCURATE);
     tess.setMode(ofxTesseract::WORD);
 
