@@ -2,8 +2,8 @@
 
 #include "ofMain.h"
 #include "ofxTesseract.h"
-#include "ofxAutoControlPanel.h"
 #include "ofxMacamPs3Eye.h"
+#include "ofxUI.h"
 
 class testApp : public ofBaseApp{
 
@@ -22,13 +22,25 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-        string runOcr(int x, int y, int w, int h);
+        string runOcr(ofPoint pos, int w, int h);
     
         ofxTesseract tess;
         ofImage img, cropped;
         string ocrResult;
-        ofxAutoControlPanel panel;
+        ofxUICanvas *gui;
         bool rescan;
     
-    	vector<ofxMacamPs3Eye*> cameras; 
+    	vector<ofxMacamPs3Eye*> cameras;
+
+        int total;
+        vector<int> totals;
+
+        bool init;
+
+        void exit();
+        void guiEvent(ofxUIEventArgs &e);
+
+        float w, h;
+        ofPoint position;
+
 };
