@@ -31,10 +31,11 @@ class testApp : public ofBaseApp{
         string ocrResult;
         bool init;
         bool rescan;
+        bool reset;
 
         string name;
 
-    	vector<ofxMacamPs3Eye*> cameras;
+        ofxMacamPs3Eye * camera;
 
         int total;
         vector<int> totals;
