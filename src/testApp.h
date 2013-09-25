@@ -32,6 +32,9 @@ class testApp : public ofBaseApp{
         string ocrResult;
         bool init;
         bool reset;
+        bool debug;
+        bool dragging;
+        bool scan;
 
         string name;
 
