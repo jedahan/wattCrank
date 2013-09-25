@@ -21,26 +21,24 @@ class testApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-
-        string runOcr(ofPoint pos, int w, int h);
     
         ofxTesseract tess;
         ofImage img, cropped;
-        string ocrResult;
+        ofPoint source, destination;
+
         ofxUICanvas *gui;
+
+        string ocrResult;
+        bool init;
         bool rescan;
-    
+
+        string name;
+
     	vector<ofxMacamPs3Eye*> cameras;
 
         int total;
         vector<int> totals;
 
-        bool init;
-
         void exit();
         void guiEvent(ofxUIEventArgs &e);
-
-        float w, h;
-        ofPoint position;
-
 };

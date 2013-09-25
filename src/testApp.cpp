@@ -9,9 +9,9 @@ void testApp::setup(){
     // SCOREBOARD
     vector<int> totals;
     total = 0;
-    position = ofPoint(ofGetHeight()/2, ofGetWidth()/2);
-    w = h = 120;
-    rescan = true;
+    source = ofPoint(ofGetHeight()/2, ofGetWidth()/2);
+    destination = ofPoint(source.x+100,source.y+60);
+    rescan = false;
     init = false;
 
     // OCR
@@ -32,10 +32,8 @@ void testApp::setup(){
     gui = new ofxUICanvas();
     gui->addLabel("wattCRANK", OFX_UI_FONT_LARGE);
     gui->addSpacer();
-    gui->addSlider("W", 0, 320, &w, 95, dim);
-    gui->addSlider("H", 0, 240, &h, 95, dim);
+    gui->addTextInput("NAME", name);
     gui->addSpacer();
-    gui->add2DPad("CENTER", ofPoint(0,img.width), ofPoint(0,img.height), &position, img.width/8, img.height/8);
     gui->addLabel("'R' TO RESCAN", OFX_UI_FONT_MEDIUM);
     gui->autoSizeToFitWidgets();
     ofAddListener(gui->newGUIEvent, this, &testApp::guiEvent);
@@ -63,12 +61,11 @@ void testApp::guiEvent(ofxUIEventArgs &e){
         ofxUIToggle *toggle = (ofxUIToggle *) e.widget;
         toggle->setValue(false);
         total=0;
-    } else if(e.widget->getName() == "W") {
-        ofxUISlider *slider = (ofxUISlider *) e.widget;
-        w = slider->getScaledValue();
-    } else if(e.widget->getName() == "H") {
-        ofxUISlider *slider = (ofxUISlider *) e.widget;
-        h = slider->getScaledValue();
+    } else if (e.widget->getName() == "NAME"){
+        ofxUITextInput *text = (ofxUITextInput *) e.widget;
+        name = text->getTextString();
+        text->setTextString(name);
+        cout << "NAME " << name << endl;
     }
 }
 
@@ -80,29 +77,23 @@ void testApp::exit()
 
 //--------------------------------------------------------------
 void testApp::update(){
+
     if(init){
         cameras[0]->update();
+        img.setFromPixels(cameras[0]->getPixelsRef());
     }
 
     if(rescan) {
-        ocrResult = runOcr(position,w,h);
-        cropped.update();
+        ocrResult = tess.findText(cropped);
         cout << ocrResult;
         total += ofToInt(ocrResult);
         rescan = false;
     }
+
+    cropped.cropFrom(img,source.x,source.y,destination.x-source.x,destination.y-source.y);
+    cropped.update();
+
 }
-
-// run the ocr
-string testApp::runOcr(ofPoint pos, int w, int h) {
-    if(cameras.size() > 0){
-        img.setFromPixels(cameras[0]->getPixelsRef());
-    }
-    cropped.cropFrom(img,pos.x,pos.y,w,h);
-    return tess.findText(cropped);
-}
-
-
 
 //--------------------------------------------------------------
 void testApp::draw(){
@@ -122,7 +113,7 @@ void testApp::draw(){
 	ofSetColor(255);
 	img.draw(0, 0);
     ofSetColor(0,255,0);
-	cropped.draw(position.x, position.y);
+	cropped.draw(source.x, source.y);
 	ofSetColor(255);
 
     ofPopStyle();
@@ -156,16 +147,20 @@ void testApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button){
-    this->position.x = x;
-    this->position.y = y;
-    rescan = true;
+    if(!gui->isHit(x,y)) {
+        this->destination.x = x;
+        this->destination.y = y;
+    }
 }
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
-    this->position.x = x;
-    this->position.y = y;
-    rescan = true;
+    if(!gui->isHit(x,y)) {
+        this->source.x = x;
+        this->source.y = y;
+        this->destination.x = x;
+        this->destination.y = y;
+    }
 }
 
 //--------------------------------------------------------------
@@ -176,13 +171,12 @@ void testApp::keyReleased(int key){
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button)
 {
-
+    rescan = true;
 }
 
 //--------------------------------------------------------------
 void testApp::windowResized(int w, int h)
 {
-
 
 }
 
