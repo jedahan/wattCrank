@@ -1,19 +1,26 @@
 #include "testApp.h"
+#include "run.h"
 
 //--------------------------------------------------------------
 void testApp::setup(){
     // OPENFRAMEWORKS
     ofSetVerticalSync(true);
+    ofSetFrameRate(60);
 	ofEnableSmoothing();
 
     // SCOREBOARD
-    vector<int> totals;
-    total = 0;
-    name = "Jonathan";
+    vector<run> runs;
 
-    source = ofPoint(ofGetHeight()/2, ofGetWidth()/2);
-    destination = ofPoint(source.x+10,source.y+10);
-    rescan = false;
+    run blah;
+    blah.setup("jedahan",100);
+    runs.push_back(blah);
+
+    name = runs[0].name;
+
+    int w = 50;
+    source = ofPoint(ofGetWidth()/2 - w, ofGetHeight()/2 - w);
+    destination = ofPoint(source.x+w,source.y+w);
+
     init = false;
     reset = false;
 
@@ -28,13 +35,14 @@ void testApp::setup(){
 	img.loadImage("joule00.jpg");
 	img.setImageType(OF_IMAGE_GRAYSCALE);
 	img.update();
+    cropped.cropFrom(img,source.x,source.y,destination.x-source.x,destination.y-source.y);
 
     // UI
 
     gui = new ofxUICanvas();
     gui->addLabel("wattCRANK", OFX_UI_FONT_LARGE);
     gui->addSpacer();
-    gui->addTextInput("NAME", name);
+    gui->addTextInput("NAME", name)->setAutoClear(false);;
     gui->addSpacer();
     gui->addToggle("RESET", &reset);
     gui->addLabel("'R' TO RESCAN", OFX_UI_FONT_MEDIUM);
@@ -55,16 +63,20 @@ void testApp::setup(){
 }
 
 void testApp::guiEvent(ofxUIEventArgs &event){
+
     if(event.widget->getName() == "RESET"){
-        cout << "SCORE " << total << endl;
         ofxUIToggle *toggle = (ofxUIToggle *) event.widget;
         toggle->setValue(false);
-        total=0;
     } else if (event.widget->getName() == "NAME"){
         ofxUITextInput *text = (ofxUITextInput *) event.widget;
-        name = text->getTextString();
-        text->setTextString(name);
-        cout << "NAME " << name << endl;
+
+        if(text->getTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER)
+        {
+            run blah;
+            blah.setup(text->getTextString());
+            runs.push_back(blah);
+            name = text->getTextString();
+        }
     }
 }
 
@@ -84,12 +96,17 @@ void testApp::update(){
 
     cropped.update();
 
-    if(rescan) {
+    // Every 60 frames, rescan
+    if(ofGetFrameNum()>180 && !(ofGetFrameNum()%60)) {
         ocrResult = tess.findText(cropped);
-        cout << ocrResult;
-        total += ofToInt(ocrResult);
-        rescan = false;
+        for(run r : runs){
+            if(r.name.compare(name)==0){
+                r.score += ofToInt(ocrResult);
+            }
+        }
     }
+
+    ofSort(runs,run::sort);
 }
 
 //--------------------------------------------------------------
@@ -107,6 +124,11 @@ void testApp::draw(){
     ofRect(source,destination.x-source.x,destination.y-source.y);
 	ofSetColor(255);
 
+    int y = 30;
+    for(run r: runs){
+        ofDrawBitmapStringHighlight(r.name + ": " + ofToString(r.score), ofGetWidth()-100, y += 20);
+    }
+
     ofPopStyle();
 }
 
@@ -119,9 +141,6 @@ void testApp::keyPressed(int key){
             break;
         case 'j':
             img.loadImage("joule00.jpg");
-            break;
-        case 'r':
-            rescan = true;
             break;
         case 'f':
 			ofToggleFullscreen();
@@ -174,8 +193,6 @@ void testApp::mouseReleased(int x, int y, int button)
     }
 
     cropped.cropFrom(img,source.x,source.y,destination.x-source.x,destination.y-source.y);
-
-    rescan = true;
 }
 
 //--------------------------------------------------------------

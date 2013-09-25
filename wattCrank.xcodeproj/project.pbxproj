@@ -41,6 +41,7 @@
 		A6E663C9C7F2B67585FCA31A /* MyCameraInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD03ABE0301C38C40C1D15D /* MyCameraInfo.m */; };
 		A977196B829A665AAF57E123 /* FrameCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6274CC2883159945C01AEEDC /* FrameCounter.m */; };
 		ADF8B0EA6A6B24734C9AA58C /* MiniGraphicsTools.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1754FF232D736FA53DBCD7F0 /* MiniGraphicsTools.cpp */; };
+		B6DC609017F3778400D92820 /* run.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B6DC608E17F3778400D92820 /* run.cpp */; };
 		B9DA57768B33F7C78565D998 /* MiscTools.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C068762039E5B66A5822DF1 /* MiscTools.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		C6A9EC27E2608C434BCA1DB9 /* guiType2DSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F740139603D171038C4E1057 /* guiType2DSlider.cpp */; };
@@ -225,6 +226,8 @@
 		B6BB1F3E17F2947D00783BEF /* ofxUIWaveform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUIWaveform.h; sourceTree = "<group>"; };
 		B6BB1F3F17F2947D00783BEF /* ofxUIWidget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUIWidget.h; sourceTree = "<group>"; };
 		B6BB1F4017F2947D00783BEF /* ofxUIWidgetWithLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUIWidgetWithLabel.h; sourceTree = "<group>"; };
+		B6DC608E17F3778400D92820 /* run.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = run.cpp; sourceTree = "<group>"; };
+		B6DC608F17F3778400D92820 /* run.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = run.h; sourceTree = "<group>"; };
 		B6DE77B62F1E9D2BDE3BE888 /* Histogram.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; name = Histogram.m; path = ../../../addons/ofxMacamPs3Eye/src/macam/Histogram.m; sourceTree = SOURCE_ROOT; };
 		B70D8C165CC65EEE349E643F /* guiTypeCustom.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = guiTypeCustom.h; path = ../../../addons/ofxControlPanel/src/guiTypeCustom.h; sourceTree = SOURCE_ROOT; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
@@ -530,6 +533,8 @@
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
+				B6DC608E17F3778400D92820 /* run.cpp */,
+				B6DC608F17F3778400D92820 /* run.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -768,6 +773,7 @@
 				70D04CD0CF0891EBF497A21C /* BayerConverter.m in Sources */,
 				F04CCCF871B1F43935BF762B /* ControllerInterface.m in Sources */,
 				A977196B829A665AAF57E123 /* FrameCounter.m in Sources */,
+				B6DC609017F3778400D92820 /* run.cpp in Sources */,
 				CD33672097FDA1FFBEDAA629 /* GenericDriver.m in Sources */,
 				54246E0E70670038E43D95BC /* Histogram.m in Sources */,
 				7420F743C006B26B95FF9051 /* LookUpTable.m in Sources */,

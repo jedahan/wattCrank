@@ -4,6 +4,7 @@
 #include "ofxTesseract.h"
 #include "ofxMacamPs3Eye.h"
 #include "ofxUI.h"
+#include "run.h"
 
 class testApp : public ofBaseApp{
 
@@ -30,15 +31,13 @@ class testApp : public ofBaseApp{
 
         string ocrResult;
         bool init;
-        bool rescan;
         bool reset;
 
         string name;
 
         ofxMacamPs3Eye * camera;
 
-        int total;
-        vector<int> totals;
+        vector<run> runs;
 
         void exit();
         void guiEvent(ofxUIEventArgs &e);
