@@ -38,6 +38,7 @@ class testApp : public ofBaseApp{
         int width;
 
         string name;
+        int runIndex;
 
         ofxMacamPs3Eye * camera;
 

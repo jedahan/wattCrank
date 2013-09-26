@@ -136,6 +136,12 @@ void testApp::update(){
         }
 
         ofSort(runs,run::sort);
+        for(int i=0; i<runs.size(); i++){
+            if(runs[i]->name==name){
+                runIndex = i;
+            }
+        }
+
     }
 }
 
@@ -161,7 +167,6 @@ void testApp::draw(){
             ofDrawBitmapStringHighlight(r->name + ": " + ofToString(r->score), 20, y += 20);
         }
     } else {
-        int me=0;
         ofBackground(0,0,0);
         img.draw(0, 0);
         ofSetColor(255,0,255);
@@ -171,21 +176,17 @@ void testApp::draw(){
 
 
         // find what index the current run is in
-        for(int i=0; i<runs.size(); i++){
-            if(runs[i]->name==name){
-                me = i;
-            }
-        }
         ofSetColor(0,255,255,64);
         ofRect(10,y-fontSize*1.2-20,ofGetWidth()/2+(5*fontSize),(2*width+1)*fontSize*1.2+40);
         ofSetColor(255);
-        for(int j=max(me-width,0);j<=max(me+width,2*width);j++){
+
+        for(int j=max(runIndex-width,0);j<=max(runIndex+width,2*width);j++){
             if(j<runs.size()){
-                if(j==me){ofSetColor(255,255,0);}
+                if(j==runIndex){ofSetColor(255,255,0);}
                 myFont.drawString(ofToString(j) + " " + runs[j]->name, 20, y);
                 myFont.drawString(ofToString(runs[j]->score), ofGetWidth()/2, y);
                 y += fontSize*1.2;
-                if(j==me){ofSetColor(255,255,255);}
+                if(j==runIndex){ofSetColor(255,255,255);}
             }
         }
 
