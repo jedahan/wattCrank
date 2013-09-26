@@ -4,6 +4,7 @@
 #include "ofxTesseract.h"
 #include "ofxMacamPs3Eye.h"
 #include "ofxUI.h"
+#include "ofTrueTypeFont.h"
 #include "run.h"
 
 class testApp : public ofBaseApp{
@@ -36,12 +37,18 @@ class testApp : public ofBaseApp{
         bool dragging;
         bool scan;
 
+        int fontSize;
+        float y;
+        int width;
+
         string name;
 
         ofxMacamPs3Eye * camera;
 
-        vector<run> runs;
+        vector<run*> runs;
 
         void exit();
         void guiEvent(ofxUIEventArgs &e);
+
+        ofTrueTypeFont myFont;
 };

@@ -7,9 +7,8 @@ class run {
         int score;
         string name;
 
-        void setup(string name);
-        void setup(string name, int score);
-        int setScore(int score);
+        run(string name);
+        run(string name, int score);
 
-        static bool sort(run a, run b);
+        static bool sort(run * a, run * b);
 };

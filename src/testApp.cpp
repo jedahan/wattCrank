@@ -1,6 +1,7 @@
 #include "testApp.h"
 #include "run.h"
 
+
 //--------------------------------------------------------------
 void testApp::setup(){
     // OPENFRAMEWORKS
@@ -8,16 +9,34 @@ void testApp::setup(){
     ofSetFrameRate(60);
 	ofEnableSmoothing();
 
-    // SCOREBOARD
-    vector<run> runs;
+    fontSize = 24;
+    y = fontSize*1.2;
+    width=3; // number of players to have above and below
 
-    run blah;
-    blah.setup("jedahan",100);
-    runs.push_back(blah);
+    myFont.loadFont("8-BIT WONDER.ttf", fontSize);
+
+    // SCOREBOARD
+    runs.push_back(new run("jedahan",100));
+    runs.push_back(new run("drlivormortis",200));
+    runs.push_back(new run("steveintro",10));
+    runs.push_back(new run("theterg",88));
+    runs.push_back(new run("pete",75));
+    runs.push_back(new run("red",160));
+    runs.push_back(new run("blue",2500));
+    runs.push_back(new run("pinkie",105));
+    runs.push_back(new run("inkie",858));
+    runs.push_back(new run("dot",7725));
+    runs.push_back(new run("blinky",104));
+    runs.push_back(new run("green",940));
+    runs.push_back(new run("yellow",90));
+    runs.push_back(new run("orange",33));
+    runs.push_back(new run("hooplalo",18));
+
     debug = true;
     scan = true;
 
-    name = runs[0].name;
+    name = runs[0]->name;
+    cout << name << endl;
 
     int w = 50;
     source = ofPoint(ofGetWidth()/2 - w, ofGetHeight()/2 - w);
@@ -78,10 +97,9 @@ void testApp::guiEvent(ofxUIEventArgs &event){
 
         if(text->getTriggerType() == OFX_UI_TEXTINPUT_ON_ENTER)
         {
-            run blah;
-            blah.setup(text->getTextString());
-            runs.push_back(blah);
             name = text->getTextString();
+            runs.push_back(new run(name));
+            cout << "HERE COMES A NEW CHALLENGER! " + runs.back()->name << endl;
         }
     }
 }
@@ -94,6 +112,8 @@ void testApp::exit()
 
 //--------------------------------------------------------------
 void testApp::update(){
+    fontSize = 24;
+    y = ofGetHeight()/2 - (width * fontSize * 1.2);
 
     if(!dragging && scan){
         if(init){
@@ -107,9 +127,10 @@ void testApp::update(){
         // Every 60 frames, rescan
         if(ofGetFrameNum()>180 && !(ofGetFrameNum()%60)) {
             ocrResult = tess.findText(cropped);
-            for(int i=0; i<runs.size();i++){
-                if(runs[i].name.compare(name)==0){
-                    runs[i].score += ofToInt(ocrResult);
+            for(run * r : runs) {
+                if(!(r->name.compare(name))){
+                    r->score += ofToInt(ocrResult);
+                    break;
                 }
             }
         }
@@ -121,11 +142,12 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
     ofPushStyle();
-	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 
 //    camera->draw(0,0);
 
     if(debug){
+
         img.draw(0, 0);
 
         ofDrawBitmapStringHighlight(ocrResult, ofGetWidth()-60, 20);
@@ -135,11 +157,33 @@ void testApp::draw(){
         ofSetColor(255);
 
         int y = 160;
-        for(run r: runs){
-            ofDrawBitmapStringHighlight(r.name + ": " + ofToString(r.score), 20, y += 20);
+        for(run * r: runs){
+            ofDrawBitmapStringHighlight(r->name + ": " + ofToString(r->score), 20, y += 20);
         }
-    }
+    } else {
+        int me=0;
+        ofBackground(0,0,0);
+        ofSetColor(255,0,255);
+        myFont.drawString("WATTCRANK",ofGetWidth()/2-100, fontSize*1.8);
+        ofSetColor(255);
 
+        // find what index the current run is in
+        for(int i=0; i<runs.size(); i++){
+            if(runs[i]->name==name){
+                me = i;
+            }
+        }
+        for(int j=me-width;j<=me+width;j++){
+            if(j>=0 && j<runs.size()){
+                if(j==me){ofSetColor(255,255,0);}
+                myFont.drawString(ofToString(j) + " " + runs[j]->name, 20, y);
+                myFont.drawString(ofToString(runs[j]->score), ofGetWidth()-(5*fontSize)-20, y);
+                y += fontSize*1.2;
+                if(j==me){ofSetColor(255,255,255);}
+            }
+        }
+
+    }
     ofPopStyle();
 }
 
