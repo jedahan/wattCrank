@@ -36,6 +36,9 @@ class testApp : public ofBaseApp{
         int fontSize;
         float y;
         int width;
+        float seconds;
+        float lastFrameNum;
+        float maxSeconds;
 
         string name;
         int runIndex;
@@ -47,5 +50,5 @@ class testApp : public ofBaseApp{
         void exit();
         void guiEvent(ofxUIEventArgs &e);
 
-        ofTrueTypeFont myFont;
+        ofTrueTypeFont myFont, secondsFont;
 };

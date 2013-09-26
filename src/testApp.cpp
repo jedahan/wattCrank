@@ -8,12 +8,14 @@ void testApp::setup(){
     ofSetVerticalSync(true);
     ofSetFrameRate(60);
 	ofEnableSmoothing();
+    maxSeconds = 60;
 
     fontSize = 24;
     y = fontSize*1.2;
     width=3; // number of players to have above and below
 
     myFont.loadFont("8-BIT WONDER.ttf", fontSize);
+    secondsFont.loadFont("PressStart2P.ttf", fontSize);
 
     // SCOREBOARD
     runs.push_back(new run("jedahan",100));
@@ -59,11 +61,11 @@ void testApp::setup(){
     cropped.cropFrom(img,source.x,source.y,destination.x-source.x,destination.y-source.y);
 
     // UI
-
     gui = new ofxUICanvas();
-    gui->addLabel("wattCRANK", OFX_UI_FONT_LARGE);
+    gui->addLabel("NEW PLAYER", OFX_UI_FONT_LARGE);
+    gui->addTextInput("NAME", name)->setAutoClear(false);
     gui->addSpacer();
-    gui->addTextInput("NAME", name)->setAutoClear(false);;
+    gui->addSlider("SECONDS",10,90,&maxSeconds);
     gui->addSpacer();
     gui->addToggle("STOP", &scan);
     gui->autoSizeToFitWidgets();
@@ -100,6 +102,8 @@ void testApp::guiEvent(ofxUIEventArgs &event){
             name = text->getTextString();
             runs.push_back(new run(name));
             cout << "HERE COMES A NEW CHALLENGER! " + runs.back()->name << endl;
+            seconds = maxSeconds;
+            lastFrameNum = ofGetFrameNum();
         }
     }
 }
@@ -114,34 +118,39 @@ void testApp::exit()
 void testApp::update(){
     fontSize = 24;
     y = ofGetHeight()/2 - (width * fontSize * 1.2);
+    ofSort(runs,run::sort);
 
-    if(!dragging && scan){
-        if(init){
-            camera->update();
-            img.setFromPixels(camera->getPixelsRef());
+    for(int i=0; i<runs.size(); i++){
+        if(runs[i]->name==name){
+            runIndex = i;
         }
+    }
 
-        cropped.cropFrom(img,source.x,source.y,destination.x-source.x,destination.y-source.y);
-        cropped.update();
+    if(seconds>0){
+        seconds -= (ofGetFrameNum() - lastFrameNum)/ofGetFrameRate();
+        lastFrameNum = ofGetFrameNum();
 
-        // Every 60 frames, rescan
-        if(ofGetFrameNum()>180 && !(ofGetFrameNum()%60)) {
-            ocrResult = tess.findText(cropped);
-            for(run * r : runs) {
-                if(!(r->name.compare(name))){
-                    r->score += ofToInt(ocrResult);
-                    break;
+        if(!dragging && scan){
+            if(init){
+                camera->update();
+                img.setFromPixels(camera->getPixelsRef());
+            }
+
+            cropped.cropFrom(img,source.x,source.y,destination.x-source.x,destination.y-source.y);
+            cropped.update();
+
+            // Every 60 frames, rescan
+            if(ofGetFrameNum()>(3*ofGetFrameRate()) && !(ofGetFrameNum() % 60)) {
+                ocrResult = tess.findText(cropped);
+                for(run * r : runs) {
+                    if(!(r->name.compare(name))){
+                        r->score += ofToInt(ocrResult);
+                        break;
+                    }
                 }
             }
-        }
 
-        ofSort(runs,run::sort);
-        for(int i=0; i<runs.size(); i++){
-            if(runs[i]->name==name){
-                runIndex = i;
-            }
         }
-
     }
 }
 
@@ -153,7 +162,6 @@ void testApp::draw(){
 //    camera->draw(0,0);
 
     if(debug){
-
         img.draw(0, 0);
 
         ofDrawBitmapStringHighlight(ocrResult, ofGetWidth()-60, 20);
@@ -167,15 +175,6 @@ void testApp::draw(){
             ofDrawBitmapStringHighlight(r->name + ": " + ofToString(r->score), 20, y += 20);
         }
     } else {
-        ofBackground(0,0,0);
-        img.draw(0, 0);
-        ofSetColor(255,0,255);
-
-        myFont.drawString("WATTCRANK",ofGetWidth()/2-100, fontSize*1.8);
-        ofSetColor(255);
-
-
-        // find what index the current run is in
         ofSetColor(0,255,255,64);
         ofRect(10,y-fontSize*1.2-20,ofGetWidth()/2+(5*fontSize),(2*width+1)*fontSize*1.2+40);
         ofSetColor(255);
@@ -190,8 +189,16 @@ void testApp::draw(){
             }
         }
 
+        if(seconds>0){
+            ofSetColor(255,0,0);
+            secondsFont.drawString(ofToString(seconds,2) + " seconds left", ofGetWidth()-440, 60);
+            ofSetColor(255);
+        }
+
     }
+    myFont.drawString("WATTCRANK",ofGetWidth()/2-100, fontSize*1.8);
     ofPopStyle();
+
 }
 
 //--------------------------------------------------------------
