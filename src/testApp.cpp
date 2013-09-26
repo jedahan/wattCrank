@@ -163,9 +163,12 @@ void testApp::draw(){
     } else {
         int me=0;
         ofBackground(0,0,0);
+        img.draw(0, 0);
         ofSetColor(255,0,255);
+
         myFont.drawString("WATTCRANK",ofGetWidth()/2-100, fontSize*1.8);
         ofSetColor(255);
+
 
         // find what index the current run is in
         for(int i=0; i<runs.size(); i++){
@@ -173,11 +176,14 @@ void testApp::draw(){
                 me = i;
             }
         }
-        for(int j=me-width;j<=me+width;j++){
-            if(j>=0 && j<runs.size()){
+        ofSetColor(0,255,255,64);
+        ofRect(10,y-fontSize*1.2-20,ofGetWidth()/2+(5*fontSize),(2*width+1)*fontSize*1.2+40);
+        ofSetColor(255);
+        for(int j=max(me-width,0);j<=max(me+width,2*width);j++){
+            if(j<runs.size()){
                 if(j==me){ofSetColor(255,255,0);}
                 myFont.drawString(ofToString(j) + " " + runs[j]->name, 20, y);
-                myFont.drawString(ofToString(runs[j]->score), ofGetWidth()-(5*fontSize)-20, y);
+                myFont.drawString(ofToString(runs[j]->score), ofGetWidth()/2, y);
                 y += fontSize*1.2;
                 if(j==me){ofSetColor(255,255,255);}
             }
@@ -209,11 +215,6 @@ void testApp::keyPressed(int key){
 }
 
 //--------------------------------------------------------------
-void testApp::mouseMoved(int x, int y ){
-
-}
-
-//--------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button){
     if(debug){
         if(!gui->isHit(x,y)) {
@@ -234,11 +235,6 @@ void testApp::mousePressed(int x, int y, int button){
         }
     }
     dragging = true;
-}
-
-//--------------------------------------------------------------
-void testApp::keyReleased(int key){
-
 }
 
 //--------------------------------------------------------------
@@ -263,14 +259,4 @@ void testApp::mouseReleased(int x, int y, int button)
 void testApp::windowResized(int w, int h)
 {
 
-}
-
-//--------------------------------------------------------------
-void testApp::gotMessage(ofMessage msg){
-
-}
-
-//--------------------------------------------------------------
-void testApp::dragEvent(ofDragInfo dragInfo){
-    
 }
