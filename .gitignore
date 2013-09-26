@@ -1,4 +1,4 @@
 .DS_Store
 bin
 !bin/data/tessdata/eng.traineddata
-wattCrank.xcodeproj/project.xcworkspace/xcuserdata/jedahan.xcuserdatad/UserInterfaceState.xcuserstate
+xcuserdata
